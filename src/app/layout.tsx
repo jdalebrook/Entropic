@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aventura de Conexión",
-  description: "Pequeños encuentros humanos donde la conexión real puede aparecer.",
+  title: "ENTROPIC",
+  description: "solo personas",
 };
 
 export default function RootLayout({
