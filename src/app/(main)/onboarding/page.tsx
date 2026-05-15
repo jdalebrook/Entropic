@@ -38,14 +38,14 @@ export default function OnboardingPage() {
     if (!user) { router.replace('/login'); return }
 
     const { data: authUser } = await supabase.auth.getUser()
-    const phone = authUser.user?.phone ?? ''
+    const email = authUser.user?.email ?? ''
 
     const avatarSeed = Math.random().toString(36).slice(2, 10)
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
     const { error: err } = await supabase.from('profiles').insert({
       id: user.id,
-      phone,
+      email,
       name: name.trim(),
       birth_year: parseInt(birthYear),
       city: city.trim(),

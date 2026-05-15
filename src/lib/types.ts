@@ -36,7 +36,7 @@ export interface Database {
       profiles: {
         Row: {
           id: string
-          phone: string
+          email: string
           name: string
           birth_year: number
           city: string
@@ -53,7 +53,7 @@ export interface Database {
         }
         Insert: {
           id: string
-          phone: string
+          email: string
           name: string
           birth_year: number
           city: string
@@ -69,7 +69,7 @@ export interface Database {
           updated_at?: string
         }
         Update: {
-          phone?: string
+          email?: string
           name?: string
           birth_year?: number
           city?: string

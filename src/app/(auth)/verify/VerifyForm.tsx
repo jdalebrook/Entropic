@@ -7,15 +7,15 @@ import { createClient } from '@/lib/supabase/client'
 export default function VerifyForm() {
   const router = useRouter()
   const params = useSearchParams()
-  const phone = params.get('phone') ?? ''
+  const email = params.get('email') ?? ''
 
   const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (!phone) router.replace('/login')
-  }, [phone, router])
+    if (!email) router.replace('/login')
+  }, [email, router])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -24,9 +24,9 @@ export default function VerifyForm() {
 
     const supabase = createClient()
     const { error: err } = await supabase.auth.verifyOtp({
-      phone,
+      email,
       token: otp,
-      type: 'sms',
+      type: 'email',
     })
 
     if (err) {
@@ -51,10 +51,10 @@ export default function VerifyForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label htmlFor="otp" className="text-stone-400 text-sm">
-          Código de verificación
+          Código de acceso
         </label>
         <p className="text-stone-500 text-xs mb-2">
-          Enviado a {phone}
+          Enviado a {email}
         </p>
         <input
           id="otp"
@@ -70,9 +70,7 @@ export default function VerifyForm() {
         />
       </div>
 
-      {error && (
-        <p className="text-red-400 text-sm">{error}</p>
-      )}
+      {error && <p className="text-red-400 text-sm">{error}</p>}
 
       <button
         type="submit"
@@ -87,7 +85,7 @@ export default function VerifyForm() {
         onClick={() => router.replace('/login')}
         className="text-stone-500 text-sm text-center hover:text-stone-300 transition-colors"
       >
-        Cambiar número
+        Cambiar correo
       </button>
     </form>
   )
