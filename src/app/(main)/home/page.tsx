@@ -38,7 +38,15 @@ export default async function HomePage() {
         .select('id, name, huella, intention, avatar_seed, avatar_options')
         .eq('id', partnerId)
         .single()
-      return { ...conn, partner, isPrimary, isUserA, closedByMe: !!myReason }
+      const { data: lastMsg } = await supabase
+        .from('messages')
+        .select('sender_id')
+        .eq('connection_id', conn.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+      const hasUnread = !!lastMsg && lastMsg.sender_id !== user.id
+      return { ...conn, partner, isPrimary, isUserA, closedByMe: !!myReason, hasUnread }
     })
   )
 
@@ -87,6 +95,7 @@ export default async function HomePage() {
               label="Principal"
               closedByMe={primary.closedByMe}
               isUserA={primary.isUserA}
+              hasUnread={primary.hasUnread}
             />
           )}
 
@@ -101,6 +110,7 @@ export default async function HomePage() {
               label="Secundaria"
               closedByMe={secondary.closedByMe}
               isUserA={secondary.isUserA}
+              hasUnread={secondary.hasUnread}
             />
           )}
         </div>
