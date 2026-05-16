@@ -13,11 +13,12 @@ export const AVATAR_MOUTHS = ['lilSmile', 'wideSmile', 'tongueOut', 'open', 'kis
 export const AVATAR_COLORS = ['b6e3f4', 'ffd5dc', 'd4f0c0', 'fbe7c6', 'e0d4f0', 'c8b8f0', 'f0e4d4', '2a2535']
 
 function buildSvg(seed: string, options?: AvatarOptions): string {
+  const defaultBg = AVATAR_COLORS[seed.charCodeAt(0) % AVATAR_COLORS.length]
   return createAvatar(funEmoji, {
     seed,
     eyes: options?.eyes ? [options.eyes as any] : undefined,
     mouth: options?.mouth ? [options.mouth as any] : undefined,
-    backgroundColor: options?.backgroundColor ? [options.backgroundColor] : undefined,
+    backgroundColor: [options?.backgroundColor ?? defaultBg],
     radius: 50,
     size: 128,
   }).toString()
