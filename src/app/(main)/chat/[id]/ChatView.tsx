@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import Avatar from '@/components/Avatar'
 import IntentionBadge from '@/components/IntentionBadge'
 import type { Intention, ClosureReason, MessageType } from '@/lib/types'
-import { CLOSURE_LABELS, GUIDED_QUESTIONS, INTENTION_LABELS } from '@/lib/types'
+import { CLOSURE_LABELS, GUIDED_QUESTIONS } from '@/lib/types'
 
 interface Message {
   id: string
@@ -31,9 +31,11 @@ interface Props {
   partner: Partner
   initialMessages: Message[]
   isClosed: boolean
+  theirReason: ClosureReason | null
+  theirReasonLabel: string | null
 }
 
-export default function ChatView({ connectionId, userId, partner, initialMessages, isClosed }: Props) {
+export default function ChatView({ connectionId, userId, partner, initialMessages, isClosed, theirReason, theirReasonLabel }: Props) {
   const router = useRouter()
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [text, setText] = useState('')
@@ -88,10 +90,6 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
     setSending(false)
   }
 
-  async function sendGuidedQuestion(q: string) {
-    await sendMessage(q, 'guided_question')
-  }
-
   async function closeConnection(reason: ClosureReason) {
     const supabase = createClient()
     const { data: conn } = await supabase
@@ -111,7 +109,7 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
       ...(bothClosed ? { status: 'closed', closed_at: new Date().toISOString() } : {}),
     }).eq('id', connectionId)
 
-    await sendMessage(`Ha cerrado esta conexión: "${CLOSURE_LABELS[reason]}"`, 'system')
+    await sendMessage(`Cerraste esta conexión: "${CLOSURE_LABELS[reason]}"`, 'system')
     router.replace('/home')
   }
 
@@ -119,7 +117,10 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
     <div className="flex flex-col h-screen">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-e-border bg-e-bg">
-        <button onClick={() => router.push('/home')} className="text-e-faint hover:text-e-muted transition-colors">
+        <button
+          onClick={() => router.push('/home')}
+          className="text-e-faint hover:text-e-muted transition-colors p-3 -ml-3 rounded-xl"
+        >
           ←
         </button>
         <Avatar seed={partner.avatar_seed} size={36} />
@@ -130,7 +131,7 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
         {!isClosed && (
           <button
             onClick={() => setShowClosure(true)}
-            className="text-e-faint hover:text-e-muted text-xs transition-colors"
+            className="text-e-faint hover:text-e-muted text-xs transition-colors px-3 py-2 -mr-2"
           >
             Cerrar
           </button>
@@ -142,9 +143,34 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
         <p className="text-e-faint text-xs italic">"{partner.huella}"</p>
       </div>
 
+      {/* Closure banner */}
+      {isClosed && (
+        <div className="mx-4 mt-4 bg-e-surface border border-e-border rounded-2xl px-4 py-4 flex flex-col gap-2">
+          <p className="text-e-muted text-xs uppercase tracking-widest">Esta conexión terminó</p>
+          {theirReasonLabel ? (
+            <>
+              <p className="text-e-text-2 text-sm">
+                <span className="text-e-muted">{partner.name} lo cerró porque:</span>
+              </p>
+              <p className="text-e-text font-light">"{theirReasonLabel}"</p>
+            </>
+          ) : (
+            <p className="text-e-text-2 text-sm font-light">
+              {partner.name} cerró esta conexión.
+            </p>
+          )}
+          <button
+            onClick={() => router.push('/home')}
+            className="mt-2 text-e-primary text-sm hover:opacity-70 transition-opacity text-left"
+          >
+            Volver al inicio →
+          </button>
+        </div>
+      )}
+
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
-        {messages.length === 0 && (
+        {messages.length === 0 && !isClosed && (
           <div className="flex flex-col items-center gap-4 py-8 text-center">
             <p className="text-e-muted text-sm">Acabáis de conectar.</p>
             <p className="text-e-faint text-xs">¿Por dónde empezáis?</p>
@@ -152,7 +178,7 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
               {GUIDED_QUESTIONS.map(q => (
                 <button
                   key={q}
-                  onClick={() => sendGuidedQuestion(q)}
+                  onClick={() => sendMessage(q, 'guided_question')}
                   className="text-left text-e-muted text-sm bg-e-surface border border-e-border rounded-xl px-4 py-3 hover:border-e-primary/40 hover:text-e-primary transition-colors"
                 >
                   {q}
@@ -210,7 +236,7 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
             ))}
             <button
               onClick={() => setShowClosure(false)}
-              className="text-e-faint text-sm text-center hover:text-e-muted transition-colors"
+              className="text-e-faint text-sm text-center hover:text-e-muted transition-colors py-2"
             >
               Cancelar
             </button>
@@ -224,9 +250,9 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
           <button
             onClick={() => {
               const q = GUIDED_QUESTIONS[Math.floor(Math.random() * GUIDED_QUESTIONS.length)]
-              sendGuidedQuestion(q)
+              sendMessage(q, 'guided_question')
             }}
-            className="text-e-faint hover:text-e-primary transition-colors text-lg"
+            className="text-e-faint hover:text-e-primary transition-colors text-lg p-1"
             title="Pregunta guiada"
           >
             ✦
@@ -242,7 +268,7 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
           <button
             onClick={() => sendMessage(text)}
             disabled={sending || !text.trim()}
-            className="text-e-primary hover:opacity-70 disabled:text-e-faint transition-opacity font-medium text-sm"
+            className="text-e-primary hover:opacity-70 disabled:text-e-faint transition-opacity font-medium text-sm px-1"
           >
             Enviar
           </button>
