@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import IntentionBadge from '@/components/IntentionBadge'
 import Avatar from '@/components/Avatar'
+import SearchingState from './SearchingState'
 import type { Intention } from '@/lib/types'
 import { INTENTION_LABELS } from '@/lib/types'
 
@@ -70,15 +71,10 @@ export default async function HomePage() {
       </section>
 
       {enriched.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center">
-          <div className="w-16 h-16 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center">
-            <span className="text-2xl">○</span>
-          </div>
-          <p className="text-stone-300 font-light">Buscando tu conexión</p>
-          <p className="text-stone-600 text-sm max-w-xs">
-            Cuando alguien compatible aparezca, llegará aquí. No hace falta hacer nada.
-          </p>
-        </div>
+        <SearchingState
+          userId={user.id}
+          currentIntention={profile.intention as Intention}
+        />
       ) : (
         <div className="flex flex-col gap-4">
           <p className="text-stone-500 text-xs uppercase tracking-widest">
