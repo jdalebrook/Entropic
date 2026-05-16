@@ -4,43 +4,45 @@
 :root {
   /* Dark (default) */
   --e-bg:              #171A1F;
-  --e-surface:         #20252B;
-  --e-input:           #252B33;
+  --e-surface:         rgba(32, 37, 43, 0.82);
+  --e-input:           rgba(37, 43, 51, 0.9);
   --e-text:            #E6E8EB;
   --e-text-2:          #C8CDD4;
   --e-muted:           #A7B0BA;
   --e-faint:           #555F6B;
   --e-primary:         #8FAFD9;
-  --e-primary-dim:     #1A2535;
+  --e-primary-dim:     rgba(26, 37, 53, 0.9);
   --e-on-primary:      #171A1F;
   --e-success:         #9DC6B0;
   --e-accent:          #B8A6D9;
   --e-border:          rgba(255,255,255,0.07);
   --e-focus:           rgba(143,175,217,0.55);
-  --e-disabled:        #1E2530;
+  --e-disabled:        rgba(30, 37, 48, 0.9);
   --e-disabled-text:   #555F6B;
   --e-overlay:         rgba(23,26,31,0.92);
+  --e-solid:           #171A1F;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
     --e-bg:              #F3F1EC;
-    --e-surface:         #FCFBF8;
-    --e-input:           #EDE9E1;
+    --e-surface:         rgba(252, 251, 248, 0.85);
+    --e-input:           rgba(237, 233, 225, 0.92);
     --e-text:            #30343B;
     --e-text-2:          #454A52;
     --e-muted:           #6B737D;
     --e-faint:           #9BA3AD;
     --e-primary:         #5A8DC8;
-    --e-primary-dim:     #E3EDF8;
+    --e-primary-dim:     rgba(227, 237, 248, 0.9);
     --e-on-primary:      #FCFBF8;
     --e-success:         #5A9E7A;
     --e-accent:          #8B6EC2;
     --e-border:          rgba(0,0,0,0.08);
     --e-focus:           rgba(90,141,200,0.55);
-    --e-disabled:        #E8E4DC;
+    --e-disabled:        rgba(232, 228, 220, 0.9);
     --e-disabled-text:   #9BA3AD;
     --e-overlay:         rgba(243,241,236,0.92);
+    --e-solid:           #F3F1EC;
   }
 }
 
@@ -66,19 +68,27 @@
   --color-e-focus:          var(--e-focus);
   --color-e-disabled:       var(--e-disabled);
   --color-e-disabled-text:  var(--e-disabled-text);
+  --color-e-solid:          var(--e-solid);
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+html {
+  background: var(--e-bg);
 }
 
 body {
-  background: var(--e-bg);
+  background: transparent;
   color: var(--e-text);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+/* ── Aurora ───────────────────────────────────────────────── */
 body::before {
   content: "";
   position: fixed;
   inset: -20%;
-  z-index: -1;
+  z-index: 0;
+  pointer-events: none;
   background:
     radial-gradient(circle at 20% 30%, rgba(143, 175, 217, 0.22), transparent 30%),
     radial-gradient(circle at 80% 20%, rgba(184, 166, 217, 0.18), transparent 28%),
@@ -106,6 +116,17 @@ body::before {
   body::before { animation: none; }
 }
 
-button, [role="button"] { cursor: pointer; }
+/* ── Content above aurora ─────────────────────────────────── */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Mobile-friendly touch targets ───────────────────────── */
+button, [role="button"] {
+  cursor: pointer;
+  min-height: 44px;
+  min-width: 44px;
+}
 
 input[type="range"] { accent-color: var(--e-primary); }

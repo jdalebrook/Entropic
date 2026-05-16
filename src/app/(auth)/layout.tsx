@@ -1,6 +1,6 @@
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-e-bg px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-light text-e-text text-center mb-2 tracking-wide">
           ENTROPIC
