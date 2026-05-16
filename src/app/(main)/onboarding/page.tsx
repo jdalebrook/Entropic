@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Gender, Orientation, Intention } from '@/lib/types'
 import { INTENTION_LABELS } from '@/lib/types'
+import CityInput from '@/components/CityInput'
 
 const HUELLA_PROMPTS = [
   '¿Qué tipo de silencio te gusta compartir?',
@@ -134,13 +135,10 @@ export default function OnboardingPage() {
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-e-muted text-sm">Ciudad (aproximada)</label>
-              <input
-                type="text"
-                autoFocus
+              <label className="text-e-muted text-sm">Ciudad</label>
+              <CityInput
                 value={city}
-                onChange={e => setCity(e.target.value)}
-                placeholder="Madrid, Barcelona…"
+                onChange={setCity}
                 className={inputClass}
               />
             </div>
