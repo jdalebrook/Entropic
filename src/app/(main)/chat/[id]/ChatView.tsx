@@ -84,7 +84,7 @@ export default function ChatView({ connectionId, userId, isUserA, partner, initi
     const update = isUserA ? { closed_reason_a: reason } : { closed_reason_b: reason }
     const bothClosed = isUserA ? !!conn.closed_reason_b : !!conn.closed_reason_a
     await supabase.from('connections').update({ ...update, ...(bothClosed ? { status: 'closed', closed_at: new Date().toISOString() } : {}) }).eq('id', connectionId)
-    await sendMessage(`Cerraste esta conexión: "${CLOSURE_LABELS[reason]}"`, 'system')
+    await sendMessage(`cerro:${reason}`, 'system')
     router.replace('/home')
   }
 
@@ -156,7 +156,17 @@ export default function ChatView({ connectionId, userId, isUserA, partner, initi
 
         {messages.map(msg => {
           const isOwn = msg.sender_id === userId
-          if (msg.type === 'system') return <div key={msg.id} className="text-center text-e-faint text-xs py-1">{msg.content}</div>
+          if (msg.type === 'system') {
+            let text = msg.content
+            if (msg.content.startsWith('cerro:')) {
+              const key = msg.content.split(':')[1] as ClosureReason
+              const label = CLOSURE_LABELS[key] ?? key
+              text = msg.sender_id === userId
+                ? `Cerraste esta conexión: "${label}"`
+                : `${partner.name} cerró esta conexión: "${label}"`
+            }
+            return <div key={msg.id} className="text-center text-e-faint text-xs py-1">{text}</div>
+          }
           return (
             <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
