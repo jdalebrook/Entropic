@@ -4,8 +4,8 @@ import Link from 'next/link'
 import IntentionBadge from '@/components/IntentionBadge'
 import Avatar from '@/components/Avatar'
 import SearchingState from './SearchingState'
+import HomeConnectionCard from '@/components/HomeConnectionCard'
 import type { Intention } from '@/lib/types'
-import { INTENTION_LABELS } from '@/lib/types'
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -22,21 +22,23 @@ export default async function HomePage() {
 
   const { data: connections } = await supabase
     .from('connections')
-    .select(`id, status, is_primary_for_a, is_primary_for_b, user_a, user_b, matched_at`)
+    .select('id, status, is_primary_for_a, is_primary_for_b, user_a, user_b, matched_at, closed_reason_a, closed_reason_b')
     .or(`user_a.eq.${user.id},user_b.eq.${user.id}`)
     .eq('status', 'active')
     .order('matched_at', { ascending: false })
 
   const enriched = await Promise.all(
     (connections ?? []).map(async conn => {
-      const partnerId = conn.user_a === user.id ? conn.user_b : conn.user_a
-      const isPrimary = conn.user_a === user.id ? conn.is_primary_for_a : conn.is_primary_for_b
+      const isUserA = conn.user_a === user.id
+      const partnerId = isUserA ? conn.user_b : conn.user_a
+      const isPrimary = isUserA ? conn.is_primary_for_a : conn.is_primary_for_b
+      const myReason = isUserA ? conn.closed_reason_a : conn.closed_reason_b
       const { data: partner } = await supabase
         .from('profiles')
-        .select('id, name, huella, intention, avatar_seed')
+        .select('id, name, huella, intention, avatar_seed, avatar_options')
         .eq('id', partnerId)
         .single()
-      return { ...conn, partner, isPrimary }
+      return { ...conn, partner, isPrimary, isUserA, closedByMe: !!myReason }
     })
   )
 
@@ -51,7 +53,7 @@ export default async function HomePage() {
           <h1 className="text-e-text text-lg font-light">{profile.name}</h1>
         </div>
         <Link href="/profile">
-          <Avatar seed={profile.avatar_seed} size={36} />
+          <Avatar seed={profile.avatar_seed} size={36} options={profile.avatar_options ?? undefined} />
         </Link>
       </header>
 
@@ -66,6 +68,7 @@ export default async function HomePage() {
         <SearchingState
           userId={user.id}
           currentIntention={profile.intention as Intention}
+          currentScope={(profile as any).search_scope ?? 1}
         />
       ) : (
         <div className="flex flex-col gap-4">
@@ -74,54 +77,34 @@ export default async function HomePage() {
           </p>
 
           {primary && primary.partner && (
-            <Link href={`/chat/${primary.id}`}>
-              <ConnectionCard
-                name={primary.partner.name}
-                huella={primary.partner.huella}
-                intention={primary.partner.intention as Intention}
-                avatarSeed={primary.partner.avatar_seed}
-                label="Principal"
-              />
-            </Link>
+            <HomeConnectionCard
+              connectionId={primary.id}
+              name={primary.partner.name}
+              huella={primary.partner.huella}
+              intention={primary.partner.intention as Intention}
+              avatarSeed={primary.partner.avatar_seed}
+              avatarOptions={primary.partner.avatar_options ?? undefined}
+              label="Principal"
+              closedByMe={primary.closedByMe}
+              isUserA={primary.isUserA}
+            />
           )}
 
           {secondary && secondary.partner && (
-            <Link href={`/chat/${secondary.id}`}>
-              <ConnectionCard
-                name={secondary.partner.name}
-                huella={secondary.partner.huella}
-                intention={secondary.partner.intention as Intention}
-                avatarSeed={secondary.partner.avatar_seed}
-                label="Secundaria"
-              />
-            </Link>
+            <HomeConnectionCard
+              connectionId={secondary.id}
+              name={secondary.partner.name}
+              huella={secondary.partner.huella}
+              intention={secondary.partner.intention as Intention}
+              avatarSeed={secondary.partner.avatar_seed}
+              avatarOptions={secondary.partner.avatar_options ?? undefined}
+              label="Secundaria"
+              closedByMe={secondary.closedByMe}
+              isUserA={secondary.isUserA}
+            />
           )}
         </div>
       )}
-    </div>
-  )
-}
-
-function ConnectionCard({
-  name, huella, intention, avatarSeed, label,
-}: {
-  name: string
-  huella: string
-  intention: Intention
-  avatarSeed: string
-  label: string
-}) {
-  return (
-    <div className="bg-e-surface border border-e-border rounded-2xl p-4 flex gap-4 items-start hover:border-e-focus/40 transition-colors">
-      <Avatar seed={avatarSeed} size={48} />
-      <div className="flex flex-col gap-1 flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="text-e-text font-medium">{name}</span>
-          <span className="text-xs text-e-faint bg-e-input rounded-full px-2 py-0.5">{label}</span>
-        </div>
-        <p className="text-e-muted text-sm leading-snug line-clamp-2">"{huella}"</p>
-        <IntentionBadge intention={intention} small />
-      </div>
     </div>
   )
 }

@@ -23,10 +23,11 @@ export default async function ChatPage({ params }: { params: Promise<{ id: strin
   const isUserA = connection.user_a === user.id
   const partnerId = isUserA ? connection.user_b : connection.user_a
   const theirReason = (isUserA ? connection.closed_reason_b : connection.closed_reason_a) as ClosureReason | null
+  const myClosed = !!(isUserA ? connection.closed_reason_a : connection.closed_reason_b) && connection.status === 'active'
 
   const { data: partner } = await supabase
     .from('profiles')
-    .select('id, name, huella, intention, avatar_seed')
+    .select('id, name, huella, intention, avatar_seed, avatar_options')
     .eq('id', partnerId)
     .single()
 
@@ -36,12 +37,11 @@ export default async function ChatPage({ params }: { params: Promise<{ id: strin
     .eq('connection_id', id)
     .order('created_at', { ascending: true })
 
-  // Partner deleted their account — show farewell screen
   if (!partner) {
     return (
       <div className="flex flex-col h-screen">
         <div className="flex items-center gap-3 px-4 py-3 border-b border-e-border bg-e-bg">
-          <Link href="/home" className="text-e-faint hover:text-e-muted transition-colors p-2 -ml-2">
+          <Link href="/home" className="text-e-faint hover:text-e-muted transition-colors p-3 -ml-3 rounded-xl">
             ←
           </Link>
           <span className="text-e-muted text-sm">Conexión cerrada</span>
@@ -66,9 +66,11 @@ export default async function ChatPage({ params }: { params: Promise<{ id: strin
     <ChatView
       connectionId={id}
       userId={user.id}
+      isUserA={isUserA}
       partner={partner}
       initialMessages={messages ?? []}
       isClosed={connection.status === 'closed'}
+      myClosed={myClosed}
       theirReason={theirReason}
       theirReasonLabel={theirReason ? CLOSURE_LABELS[theirReason] : null}
     />

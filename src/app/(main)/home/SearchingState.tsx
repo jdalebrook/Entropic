@@ -1,21 +1,24 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Intention } from '@/lib/types'
 import { INTENTION_LABELS } from '@/lib/types'
 
+const SCOPE_LABELS = ['Mi ciudad', 'Toda España', 'Sin límites']
+
 export default function SearchingState({
   userId,
   currentIntention,
+  currentScope,
 }: {
   userId: string
   currentIntention: Intention
+  currentScope: number
 }) {
-  const router = useRouter()
   const [status, setStatus] = useState<'searching' | 'not-found'>('searching')
   const [intention, setIntention] = useState(currentIntention)
+  const [scope, setScope] = useState(currentScope)
   const [saving, setSaving] = useState(false)
 
   useEffect(() => { tryMatch() }, [])
@@ -36,6 +39,15 @@ export default function SearchingState({
     setSaving(true)
     const supabase = createClient()
     await supabase.from('profiles').update({ intention: val }).eq('id', userId)
+    setSaving(false)
+    tryMatch()
+  }
+
+  async function handleScopeChange(val: number) {
+    setScope(val)
+    setSaving(true)
+    const supabase = createClient()
+    await supabase.from('profiles').update({ search_scope: val }).eq('id', userId)
     setSaving(false)
     tryMatch()
   }
@@ -61,33 +73,52 @@ export default function SearchingState({
       <div>
         <p className="text-e-text-2 font-light">Nadie disponible ahora</p>
         <p className="text-e-faint text-sm max-w-xs mt-1">
-          Cambia lo que buscas para ampliar las posibilidades.
+          Ajusta lo que buscas para ampliar las posibilidades.
         </p>
       </div>
 
-      <div className="w-full max-w-xs flex flex-col gap-3">
-        <p className="text-e-faint text-xs uppercase tracking-widest">¿Qué te trae hoy?</p>
-        <div className="flex justify-between text-xs text-e-faint px-1">
-          <span>Escuchar</span>
-          <span>Conectar</span>
+      <div className="w-full max-w-xs flex flex-col gap-5">
+        <div className="flex flex-col gap-3">
+          <p className="text-e-faint text-xs uppercase tracking-widest">¿Qué te trae hoy?</p>
+          <div className="flex justify-between text-xs text-e-faint px-1">
+            <span>Escuchar</span>
+            <span>Conectar</span>
+          </div>
+          <input
+            type="range" min={0} max={3} step={1} value={intention}
+            onChange={e => handleIntentionChange(parseInt(e.target.value) as Intention)}
+            disabled={saving}
+            className="w-full"
+          />
+          <p className="text-center text-e-primary text-sm font-medium">
+            {INTENTION_LABELS[intention]}
+          </p>
         </div>
-        <input
-          type="range"
-          min={0}
-          max={3}
-          step={1}
-          value={intention}
-          onChange={e => handleIntentionChange(parseInt(e.target.value) as Intention)}
-          disabled={saving}
-          className="w-full"
-        />
-        <p className="text-center text-e-primary text-sm font-medium">
-          {INTENTION_LABELS[intention]}
-        </p>
+
+        <div className="flex flex-col gap-3">
+          <p className="text-e-faint text-xs uppercase tracking-widest">Área de búsqueda</p>
+          <div className="grid grid-cols-3 gap-2">
+            {SCOPE_LABELS.map((label, i) => (
+              <button
+                key={i}
+                onClick={() => handleScopeChange(i)}
+                disabled={saving}
+                className={`py-2 px-2 rounded-lg border text-xs transition-colors ${
+                  scope === i
+                    ? 'border-e-primary bg-e-primary-dim text-e-primary'
+                    : 'border-e-border text-e-muted hover:border-e-focus/50'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <button
         onClick={tryMatch}
+        disabled={saving}
         className="text-e-faint text-sm hover:text-e-muted transition-colors"
       >
         Buscar de nuevo
