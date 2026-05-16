@@ -23,7 +23,7 @@ export default function SearchingState({
   async function tryMatch() {
     setStatus('searching')
     const supabase = createClient()
-    const { data } = await supabase.rpc('try_match', { p_user_id: userId })
+    const { data } = await (supabase as any).rpc('try_match', { p_user_id: userId })
     if (data) {
       router.refresh()
     } else {
