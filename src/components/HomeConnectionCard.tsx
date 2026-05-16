@@ -21,7 +21,7 @@ interface Props {
 }
 
 export default function HomeConnectionCard({
-o  connectionId, name, huella, intention, avatarSeed, avatarOptions, label, closedByMe, isUserA, hasUnread,
+  connectionId, name, huella, intention, avatarSeed, avatarOptions, label, closedByMe, isUserA, hasUnread,
 }: Props) {
   const router = useRouter()
   const [undoing, setUndoing] = useState(false)
