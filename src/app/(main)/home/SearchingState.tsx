@@ -25,7 +25,7 @@ export default function SearchingState({
     const supabase = createClient()
     const { data } = await (supabase as any).rpc('try_match', { p_user_id: userId })
     if (data) {
-      router.refresh()
+      window.location.reload()
     } else {
       setStatus('not-found')
     }
