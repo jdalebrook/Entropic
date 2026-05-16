@@ -5,6 +5,7 @@ export interface AvatarOptions {
   eyes?: string
   mouth?: string
   backgroundColor?: string
+  [key: string]: string | undefined
 }
 
 export const AVATAR_EYES = ['closed', 'closed2', 'glasses', 'love', 'pissed', 'plain', 'shades', 'stars', 'wink']

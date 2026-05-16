@@ -30,8 +30,11 @@ export default function HomeConnectionCard({
     e.stopPropagation()
     setUndoing(true)
     const supabase = createClient()
-    const field = isUserA ? 'closed_reason_a' : 'closed_reason_b'
-    await supabase.from('connections').update({ [field]: null }).eq('id', connectionId)
+    if (isUserA) {
+      await supabase.from('connections').update({ closed_reason_a: null }).eq('id', connectionId)
+    } else {
+      await supabase.from('connections').update({ closed_reason_b: null }).eq('id', connectionId)
+    }
     window.location.reload()
   }
 

@@ -57,7 +57,7 @@ export default function ProfilePage() {
     if (user) {
       await supabase.from('profiles').update({
         avatar_seed: draftSeed,
-        avatar_options: draftOptions,
+        avatar_options: draftOptions as Record<string, string>,
       }).eq('id', user.id)
       setProfile(prev => prev ? { ...prev, avatar_seed: draftSeed, avatar_options: draftOptions } : prev)
     }

@@ -80,7 +80,9 @@ export interface Database {
           orientation?: Orientation
           intention?: Intention
           avatar_seed?: string
+          avatar_options?: Record<string, string>
           timezone?: string
+          search_scope?: number
           search_enabled?: boolean
           is_active?: boolean
         }
