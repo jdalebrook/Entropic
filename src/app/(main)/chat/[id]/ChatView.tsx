@@ -64,15 +64,14 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
   async function sendMessage(content: string, type: MessageType = 'text') {
     if (!content.trim()) return
     setSending(true)
-    const supabase = createClient()
-    await supabase.from('messages').insert({
-      connection_id: connectionId,
-      sender_id: userId,
-      content,
-      type,
-    })
-    setSending(false)
+    const tempId = crypto.randomUUID()
+    const temp: Message = { id: tempId, connection_id: connectionId, sender_id: userId, content, type, created_at: new Date().toISOString() }
+    setMessages(prev => [...prev, temp])
     setText('')
+    const supabase = createClient()
+    const { data } = await supabase.from('messages').insert({ connection_id: connectionId, sender_id: userId, content, type }).select().single()
+    if (data) setMessages(prev => prev.map(m => m.id === tempId ? data as Message : m))
+    setSending(false)
   }
 
   async function sendGuidedQuestion(q: string) {
