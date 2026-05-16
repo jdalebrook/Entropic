@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Avatar, { AVATAR_EYES, AVATAR_MOUTHS, AVATAR_COLORS, type AvatarOptions } from '@/components/Avatar'
+import BackButton from '@/components/BackButton'
 import type { Intention } from '@/lib/types'
 import { INTENTION_LABELS } from '@/lib/types'
 
@@ -89,12 +90,7 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col flex-1 px-6 py-8 gap-8">
       <header className="flex items-center gap-3">
-        <button
-          onClick={() => router.push('/home')}
-          className="text-e-faint hover:text-e-muted transition-colors p-3 -ml-3 rounded-xl min-w-[44px] min-h-[44px] flex items-center justify-center"
-        >
-          ←
-        </button>
+        <BackButton />
         <h1 className="text-e-text font-light">Tu perfil</h1>
       </header>
 

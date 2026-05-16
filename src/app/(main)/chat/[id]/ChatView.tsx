@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Avatar from '@/components/Avatar'
+import BackButton from '@/components/BackButton'
 import IntentionBadge from '@/components/IntentionBadge'
 import type { Intention, ClosureReason, MessageType } from '@/lib/types'
 import { CLOSURE_LABELS, GUIDED_QUESTIONS } from '@/lib/types'
@@ -91,9 +92,7 @@ export default function ChatView({ connectionId, userId, isUserA, partner, initi
   return (
     <div className="flex flex-col h-screen">
       <div className="flex items-center gap-3 px-4 py-3 border-b border-e-border bg-e-bg">
-        <button onClick={() => router.push('/home')} className="text-e-faint hover:text-e-muted transition-colors p-3 -ml-3 rounded-xl min-w-[44px] min-h-[44px] flex items-center justify-center">
-          ←
-        </button>
+        <BackButton />
         <Avatar seed={partner.avatar_seed} size={36} options={partner.avatar_options ?? undefined} />
         <div className="flex flex-col flex-1 min-w-0">
           <span className="text-e-text font-medium text-sm">{partner.name}</span>
