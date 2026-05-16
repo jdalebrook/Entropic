@@ -81,7 +81,7 @@ export default function OnboardingPage() {
       </div>
 
       {step === 1 && (
-        <div className="flex flex-col gap-6">
+        <form className="flex flex-col gap-6" onSubmit={e => { e.preventDefault(); setStep(2) }}>
           <div>
             <h2 className="text-xl font-light text-stone-100">¿Cómo te llamamos?</h2>
             <p className="text-stone-500 text-sm mt-1">No tiene que ser tu nombre real.</p>
@@ -113,17 +113,17 @@ export default function OnboardingPage() {
             </div>
           </div>
           <button
-            onClick={() => setStep(2)}
+            type="submit"
             disabled={name.trim().length < 2 || !birthYear || parseInt(birthYear) > CURRENT_YEAR - 18}
             className="w-full bg-amber-700 hover:bg-amber-600 disabled:bg-stone-800 disabled:text-stone-600 text-stone-100 rounded-lg py-3 font-medium transition-colors mt-auto"
           >
             Continuar
           </button>
-        </div>
+        </form>
       )}
 
       {step === 2 && (
-        <div className="flex flex-col gap-6">
+        <form className="flex flex-col gap-6" onSubmit={e => { e.preventDefault(); setStep(3) }}>
           <div>
             <h2 className="text-xl font-light text-stone-100">Un poco más</h2>
           </div>
@@ -179,17 +179,17 @@ export default function OnboardingPage() {
             </div>
           </div>
           <button
-            onClick={() => setStep(3)}
+            type="submit"
             disabled={!city.trim() || !gender || !orientation}
             className="w-full bg-amber-700 hover:bg-amber-600 disabled:bg-stone-800 disabled:text-stone-600 text-stone-100 rounded-lg py-3 font-medium transition-colors mt-auto"
           >
             Continuar
           </button>
-        </div>
+        </form>
       )}
 
       {step === 3 && (
-        <div className="flex flex-col gap-6">
+        <form className="flex flex-col gap-6" onSubmit={e => { e.preventDefault(); handleFinish() }}>
           <div>
             <h2 className="text-xl font-light text-stone-100">Tu huella</h2>
             <p className="text-stone-500 text-sm mt-1">
@@ -237,13 +237,13 @@ export default function OnboardingPage() {
           {error && <p className="text-red-400 text-sm">{error}</p>}
 
           <button
-            onClick={handleFinish}
+            type="submit"
             disabled={loading || huella.trim().length < 10}
             className="w-full bg-amber-700 hover:bg-amber-600 disabled:bg-stone-800 disabled:text-stone-600 text-stone-100 rounded-lg py-3 font-medium transition-colors mt-auto"
           >
             {loading ? 'Guardando…' : 'Empezar la aventura'}
           </button>
-        </div>
+        </form>
       )}
     </div>
   )
