@@ -22,15 +22,7 @@ export default async function HomePage() {
 
   const { data: connections } = await supabase
     .from('connections')
-    .select(`
-      id,
-      status,
-      is_primary_for_a,
-      is_primary_for_b,
-      user_a,
-      user_b,
-      matched_at
-    `)
+    .select(`id, status, is_primary_for_a, is_primary_for_b, user_a, user_b, matched_at`)
     .or(`user_a.eq.${user.id},user_b.eq.${user.id}`)
     .eq('status', 'active')
     .order('matched_at', { ascending: false })
@@ -55,8 +47,8 @@ export default async function HomePage() {
     <div className="flex flex-col flex-1 px-6 py-8 gap-8">
       <header className="flex items-center justify-between">
         <div>
-          <p className="text-stone-500 text-xs">Hola,</p>
-          <h1 className="text-stone-100 text-lg font-light">{profile.name}</h1>
+          <p className="text-e-faint text-xs">Hola,</p>
+          <h1 className="text-e-text text-lg font-light">{profile.name}</h1>
         </div>
         <Link href="/profile">
           <Avatar seed={profile.avatar_seed} size={36} />
@@ -64,7 +56,7 @@ export default async function HomePage() {
       </header>
 
       <section className="flex flex-col gap-2">
-        <p className="text-stone-500 text-xs uppercase tracking-widest">Hoy te trae</p>
+        <p className="text-e-faint text-xs uppercase tracking-widest">Hoy te trae</p>
         <Link href="/profile" className="self-start">
           <IntentionBadge intention={profile.intention as Intention} />
         </Link>
@@ -77,7 +69,7 @@ export default async function HomePage() {
         />
       ) : (
         <div className="flex flex-col gap-4">
-          <p className="text-stone-500 text-xs uppercase tracking-widest">
+          <p className="text-e-faint text-xs uppercase tracking-widest">
             {enriched.length === 1 ? 'Tu conexión' : 'Tus conexiones'}
           </p>
 
@@ -120,14 +112,14 @@ function ConnectionCard({
   label: string
 }) {
   return (
-    <div className="bg-stone-900 border border-stone-800 rounded-2xl p-4 flex gap-4 items-start hover:border-stone-700 transition-colors">
+    <div className="bg-e-surface border border-e-border rounded-2xl p-4 flex gap-4 items-start hover:border-e-focus/40 transition-colors">
       <Avatar seed={avatarSeed} size={48} />
       <div className="flex flex-col gap-1 flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-stone-100 font-medium">{name}</span>
-          <span className="text-xs text-stone-600 bg-stone-800 rounded-full px-2 py-0.5">{label}</span>
+          <span className="text-e-text font-medium">{name}</span>
+          <span className="text-xs text-e-faint bg-e-input rounded-full px-2 py-0.5">{label}</span>
         </div>
-        <p className="text-stone-400 text-sm leading-snug line-clamp-2">"{huella}"</p>
+        <p className="text-e-muted text-sm leading-snug line-clamp-2">"{huella}"</p>
         <IntentionBadge intention={intention} small />
       </div>
     </div>

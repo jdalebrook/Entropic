@@ -8,7 +8,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   if (!user) redirect('/login')
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col w-full">
+    <div className="min-h-screen bg-e-bg text-e-text flex flex-col w-full">
       {children}
     </div>
   )

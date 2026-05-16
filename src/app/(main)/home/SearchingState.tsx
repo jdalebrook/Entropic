@@ -43,31 +43,31 @@ export default function SearchingState({
   if (status === 'searching') {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center">
-        <div className="w-16 h-16 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center animate-pulse">
-          <span className="text-stone-500 text-2xl">○</span>
+        <div className="w-16 h-16 rounded-full bg-e-surface border border-e-border flex items-center justify-center animate-pulse">
+          <span className="text-e-faint text-2xl">○</span>
         </div>
-        <p className="text-stone-300 font-light">Buscando tu conexión…</p>
-        <p className="text-stone-600 text-sm">Un momento.</p>
+        <p className="text-e-text-2 font-light">Buscando tu conexión…</p>
+        <p className="text-e-faint text-sm">Un momento.</p>
       </div>
     )
   }
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center gap-6 text-center">
-      <div className="w-16 h-16 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center">
-        <span className="text-stone-500 text-2xl">○</span>
+      <div className="w-16 h-16 rounded-full bg-e-surface border border-e-border flex items-center justify-center">
+        <span className="text-e-faint text-2xl">○</span>
       </div>
 
       <div>
-        <p className="text-stone-300 font-light">Nadie disponible ahora</p>
-        <p className="text-stone-600 text-sm max-w-xs mt-1">
+        <p className="text-e-text-2 font-light">Nadie disponible ahora</p>
+        <p className="text-e-faint text-sm max-w-xs mt-1">
           Cambia lo que buscas para ampliar las posibilidades.
         </p>
       </div>
 
       <div className="w-full max-w-xs flex flex-col gap-3">
-        <p className="text-stone-500 text-xs uppercase tracking-widest">¿Qué te trae hoy?</p>
-        <div className="flex justify-between text-xs text-stone-500 px-1">
+        <p className="text-e-faint text-xs uppercase tracking-widest">¿Qué te trae hoy?</p>
+        <div className="flex justify-between text-xs text-e-faint px-1">
           <span>Escuchar</span>
           <span>Conectar</span>
         </div>
@@ -79,16 +79,16 @@ export default function SearchingState({
           value={intention}
           onChange={e => handleIntentionChange(parseInt(e.target.value) as Intention)}
           disabled={saving}
-          className="w-full accent-amber-600"
+          className="w-full"
         />
-        <p className="text-center text-amber-500 text-sm font-medium">
+        <p className="text-center text-e-primary text-sm font-medium">
           {INTENTION_LABELS[intention]}
         </p>
       </div>
 
       <button
         onClick={tryMatch}
-        className="text-stone-500 text-sm hover:text-stone-300 transition-colors"
+        className="text-e-faint text-sm hover:text-e-muted transition-colors"
       >
         Buscar de nuevo
       </button>

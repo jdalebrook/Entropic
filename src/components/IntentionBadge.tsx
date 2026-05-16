@@ -10,7 +10,7 @@ export default function IntentionBadge({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full bg-amber-900/40 text-amber-400 border border-amber-800/50 ${
+      className={`inline-flex items-center rounded-full bg-e-primary-dim text-e-primary border border-e-primary/20 ${
         small ? 'text-xs px-2 py-0.5' : 'text-sm px-3 py-1'
       }`}
     >

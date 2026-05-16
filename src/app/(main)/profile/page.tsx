@@ -41,33 +41,33 @@ export default function ProfilePage() {
 
   if (!profile) return (
     <div className="flex-1 flex items-center justify-center">
-      <div className="w-6 h-6 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
+      <div className="w-6 h-6 border-2 border-e-primary border-t-transparent rounded-full animate-spin" />
     </div>
   )
 
   return (
     <div className="flex flex-col flex-1 px-6 py-8 gap-8">
       <header className="flex items-center gap-3">
-        <button onClick={() => router.push('/home')} className="text-stone-500 hover:text-stone-300 transition-colors">
+        <button onClick={() => router.push('/home')} className="text-e-faint hover:text-e-muted transition-colors">
           ←
         </button>
-        <h1 className="text-stone-100 font-light">Tu perfil</h1>
+        <h1 className="text-e-text font-light">Tu perfil</h1>
       </header>
 
       <div className="flex flex-col items-center gap-3">
         <Avatar seed={profile.avatar_seed} size={72} />
-        <p className="text-stone-100 text-xl font-light">{profile.name}</p>
-        <p className="text-stone-500 text-sm">{profile.city}</p>
+        <p className="text-e-text text-xl font-light">{profile.name}</p>
+        <p className="text-e-muted text-sm">{profile.city}</p>
       </div>
 
-      <div className="bg-stone-900 border border-stone-800 rounded-2xl p-4">
-        <p className="text-stone-500 text-xs mb-2">Tu huella</p>
-        <p className="text-stone-300 text-sm leading-relaxed italic">"{profile.huella}"</p>
+      <div className="bg-e-surface border border-e-border rounded-2xl p-4">
+        <p className="text-e-faint text-xs mb-2">Tu huella</p>
+        <p className="text-e-text-2 text-sm leading-relaxed italic">"{profile.huella}"</p>
       </div>
 
       <div className="flex flex-col gap-3">
-        <p className="text-stone-500 text-xs uppercase tracking-widest">¿Qué te trae hoy?</p>
-        <div className="flex justify-between text-xs text-stone-600 px-1">
+        <p className="text-e-faint text-xs uppercase tracking-widest">¿Qué te trae hoy?</p>
+        <div className="flex justify-between text-xs text-e-faint px-1">
           <span>Escuchar</span>
           <span>Conectar</span>
         </div>
@@ -78,16 +78,16 @@ export default function ProfilePage() {
           step={1}
           value={intention}
           onChange={e => updateIntention(parseInt(e.target.value) as Intention)}
-          className="w-full accent-amber-600"
+          className="w-full"
         />
-        <p className="text-center text-amber-500 text-sm font-medium">
-          {INTENTION_LABELS[intention]} {saving && <span className="text-stone-600">·</span>}
+        <p className="text-center text-e-primary text-sm font-medium">
+          {INTENTION_LABELS[intention]} {saving && <span className="text-e-faint">·</span>}
         </p>
       </div>
 
       <button
         onClick={signOut}
-        className="mt-auto text-stone-600 text-sm text-center hover:text-stone-400 transition-colors"
+        className="mt-auto text-e-faint text-sm text-center hover:text-e-muted transition-colors"
       >
         Cerrar sesión
       </button>

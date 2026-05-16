@@ -18,9 +18,7 @@ export default function LoginPage() {
     const supabase = createClient()
     const { error: err } = await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: {
-        shouldCreateUser: true,
-      },
+      options: { shouldCreateUser: true },
     })
     setLoading(false)
 
@@ -35,7 +33,7 @@ export default function LoginPage() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-stone-400 text-sm">
+        <label htmlFor="email" className="text-e-muted text-sm">
           Tu correo electrónico
         </label>
         <input
@@ -47,9 +45,9 @@ export default function LoginPage() {
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
-          className="bg-stone-800 border border-stone-700 rounded-lg px-4 py-3 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-600 transition-colors"
+          className="bg-e-input border border-e-border rounded-lg px-4 py-3 text-e-text placeholder-e-faint focus:outline-none focus:border-e-focus transition-colors"
         />
-        <p className="text-stone-600 text-xs mt-1">
+        <p className="text-e-faint text-xs mt-1">
           Recibirás un código de acceso. Sin contraseñas.
         </p>
       </div>
@@ -59,7 +57,7 @@ export default function LoginPage() {
       <button
         type="submit"
         disabled={loading || !email.includes('@')}
-        className="w-full bg-amber-700 hover:bg-amber-600 disabled:bg-stone-800 disabled:text-stone-600 text-stone-100 rounded-lg py-3 font-medium transition-colors"
+        className="w-full bg-e-primary hover:opacity-90 disabled:bg-e-disabled disabled:text-e-disabled-text text-e-on-primary rounded-lg py-3 font-medium transition-all"
       >
         {loading ? 'Enviando…' : 'Continuar'}
       </button>

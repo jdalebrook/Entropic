@@ -50,10 +50,10 @@ export default function VerifyForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="otp" className="text-stone-400 text-sm">
+        <label htmlFor="otp" className="text-e-muted text-sm">
           Código de acceso
         </label>
-        <p className="text-stone-500 text-xs mb-2">
+        <p className="text-e-faint text-xs mb-2">
           Enviado a {email}
         </p>
         <input
@@ -66,7 +66,7 @@ export default function VerifyForm() {
           value={otp}
           onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
           required
-          className="bg-stone-800 border border-stone-700 rounded-lg px-4 py-3 text-stone-100 text-center text-2xl tracking-widest placeholder-stone-600 focus:outline-none focus:border-amber-600 transition-colors"
+          className="bg-e-input border border-e-border rounded-lg px-4 py-3 text-e-text text-center text-2xl tracking-widest placeholder-e-faint focus:outline-none focus:border-e-focus transition-colors"
         />
       </div>
 
@@ -75,7 +75,7 @@ export default function VerifyForm() {
       <button
         type="submit"
         disabled={loading || otp.length !== 6}
-        className="w-full bg-amber-700 hover:bg-amber-600 disabled:bg-stone-800 disabled:text-stone-600 text-stone-100 rounded-lg py-3 font-medium transition-colors"
+        className="w-full bg-e-primary hover:opacity-90 disabled:bg-e-disabled disabled:text-e-disabled-text text-e-on-primary rounded-lg py-3 font-medium transition-all"
       >
         {loading ? 'Verificando…' : 'Entrar'}
       </button>
@@ -83,7 +83,7 @@ export default function VerifyForm() {
       <button
         type="button"
         onClick={() => router.replace('/login')}
-        className="text-stone-500 text-sm text-center hover:text-stone-300 transition-colors"
+        className="text-e-faint text-sm text-center hover:text-e-muted transition-colors"
       >
         Cambiar correo
       </button>

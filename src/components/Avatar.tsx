@@ -1,14 +1,12 @@
-// Deterministic avatar using seed — no images needed, no storage
 export default function Avatar({ seed, size = 40 }: { seed: string; size?: number }) {
-  const colors = [
-    ['#78350f', '#fbbf24'],
-    ['#1e3a5f', '#60a5fa'],
-    ['#3b1d5c', '#c084fc'],
-    ['#1a3a2a', '#4ade80'],
-    ['#4a1a1a', '#f87171'],
+  const palettes = [
+    ['#1A2535', '#8FAFD9'],
+    ['#1A2A20', '#9DC6B0'],
+    ['#25203A', '#B8A6D9'],
+    ['#2A2018', '#C8B87A'],
+    ['#2A1E22', '#D4AFCA'],
   ]
-  const idx = seed.charCodeAt(0) % colors.length
-  const [bg, fg] = colors[idx]
+  const [bg, fg] = palettes[seed.charCodeAt(0) % palettes.length]
   const letter = seed[0]?.toUpperCase() ?? '?'
 
   return (

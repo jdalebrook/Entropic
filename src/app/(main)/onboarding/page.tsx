@@ -71,13 +71,16 @@ export default function OnboardingPage() {
     router.replace('/home')
   }
 
+  const inputClass = "bg-e-input border border-e-border rounded-lg px-4 py-3 text-e-text placeholder-e-faint focus:outline-none focus:border-e-focus transition-colors"
+  const btnPrimary = "w-full bg-e-primary hover:opacity-90 disabled:bg-e-disabled disabled:text-e-disabled-text text-e-on-primary rounded-lg py-3 font-medium transition-all mt-auto"
+
   return (
     <div className="flex flex-col flex-1 px-6 py-10 gap-8">
       <div className="flex gap-1">
         {[1, 2, 3].map(s => (
           <div
             key={s}
-            className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? 'bg-amber-600' : 'bg-stone-800'}`}
+            className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? 'bg-e-primary' : 'bg-e-input'}`}
           />
         ))}
       </div>
@@ -85,23 +88,23 @@ export default function OnboardingPage() {
       {step === 1 && (
         <form className="flex flex-col gap-6" onSubmit={e => { e.preventDefault(); setStep(2) }}>
           <div>
-            <h2 className="text-xl font-light text-stone-100">¿Cómo te llamamos?</h2>
-            <p className="text-stone-500 text-sm mt-1">No tiene que ser tu nombre real.</p>
+            <h2 className="text-xl font-light text-e-text">¿Cómo te llamamos?</h2>
+            <p className="text-e-muted text-sm mt-1">No tiene que ser tu nombre real.</p>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-stone-400 text-sm">Nombre</label>
+              <label className="text-e-muted text-sm">Nombre</label>
               <input
                 type="text"
                 autoFocus
                 value={name}
                 onChange={e => setName(e.target.value)}
                 placeholder="Cómo quieres que te llamemos"
-                className="bg-stone-800 border border-stone-700 rounded-lg px-4 py-3 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-600 transition-colors"
+                className={inputClass}
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-stone-400 text-sm">Año de nacimiento</label>
+              <label className="text-e-muted text-sm">Año de nacimiento</label>
               <input
                 type="number"
                 inputMode="numeric"
@@ -110,14 +113,14 @@ export default function OnboardingPage() {
                 value={birthYear}
                 onChange={e => setBirthYear(e.target.value)}
                 placeholder="1990"
-                className="bg-stone-800 border border-stone-700 rounded-lg px-4 py-3 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-600 transition-colors"
+                className={inputClass}
               />
             </div>
           </div>
           <button
             type="submit"
             disabled={name.trim().length < 2 || !birthYear || parseInt(birthYear) > CURRENT_YEAR - 18}
-            className="w-full bg-amber-700 hover:bg-amber-600 disabled:bg-stone-800 disabled:text-stone-600 text-stone-100 rounded-lg py-3 font-medium transition-colors mt-auto"
+            className={btnPrimary}
           >
             Continuar
           </button>
@@ -127,32 +130,32 @@ export default function OnboardingPage() {
       {step === 2 && (
         <form className="flex flex-col gap-6" onSubmit={e => { e.preventDefault(); setStep(3) }}>
           <div>
-            <h2 className="text-xl font-light text-stone-100">Un poco más</h2>
+            <h2 className="text-xl font-light text-e-text">Un poco más</h2>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-stone-400 text-sm">Ciudad (aproximada)</label>
+              <label className="text-e-muted text-sm">Ciudad (aproximada)</label>
               <input
                 type="text"
                 autoFocus
                 value={city}
                 onChange={e => setCity(e.target.value)}
                 placeholder="Madrid, Barcelona…"
-                className="bg-stone-800 border border-stone-700 rounded-lg px-4 py-3 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-600 transition-colors"
+                className={inputClass}
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-stone-400 text-sm">Me identifico como</label>
+              <label className="text-e-muted text-sm">Me identifico como</label>
               <div className="grid grid-cols-2 gap-2">
                 {(['hombre', 'mujer', 'no-binario', 'prefiero-no-decir'] as Gender[]).map(g => (
                   <button
                     key={g}
                     type="button"
                     onClick={() => setGender(g)}
-                    className={`py-2 px-3 rounded-lg border text-sm transition-colors capitalize ${
+                    className={`py-2 px-3 rounded-lg border text-sm transition-colors ${
                       gender === g
-                        ? 'border-amber-600 bg-amber-900/30 text-amber-400'
-                        : 'border-stone-700 text-stone-400 hover:border-stone-500'
+                        ? 'border-e-primary bg-e-primary-dim text-e-primary'
+                        : 'border-e-border text-e-muted hover:border-e-focus/50'
                     }`}
                   >
                     {g === 'prefiero-no-decir' ? 'Prefiero no decir' : g === 'no-binario' ? 'No binario' : g.charAt(0).toUpperCase() + g.slice(1)}
@@ -161,7 +164,7 @@ export default function OnboardingPage() {
               </div>
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-stone-400 text-sm">Me interesan</label>
+              <label className="text-e-muted text-sm">Me interesan</label>
               <div className="grid grid-cols-2 gap-2">
                 {(['hetero', 'gay', 'lesbiana', 'bisexual', 'pansexual', 'prefiero-no-decir'] as Orientation[]).map(o => (
                   <button
@@ -170,8 +173,8 @@ export default function OnboardingPage() {
                     onClick={() => setOrientation(o)}
                     className={`py-2 px-3 rounded-lg border text-sm transition-colors ${
                       orientation === o
-                        ? 'border-amber-600 bg-amber-900/30 text-amber-400'
-                        : 'border-stone-700 text-stone-400 hover:border-stone-500'
+                        ? 'border-e-primary bg-e-primary-dim text-e-primary'
+                        : 'border-e-border text-e-muted hover:border-e-focus/50'
                     }`}
                   >
                     {o === 'prefiero-no-decir' ? 'Prefiero no decir' : o.charAt(0).toUpperCase() + o.slice(1)}
@@ -183,7 +186,7 @@ export default function OnboardingPage() {
           <button
             type="submit"
             disabled={!city.trim() || !gender || !orientation}
-            className="w-full bg-amber-700 hover:bg-amber-600 disabled:bg-stone-800 disabled:text-stone-600 text-stone-100 rounded-lg py-3 font-medium transition-colors mt-auto"
+            className={btnPrimary}
           >
             Continuar
           </button>
@@ -193,14 +196,14 @@ export default function OnboardingPage() {
       {step === 3 && (
         <form className="flex flex-col gap-6" onSubmit={e => { e.preventDefault(); handleFinish() }}>
           <div>
-            <h2 className="text-xl font-light text-stone-100">Tu huella</h2>
-            <p className="text-stone-500 text-sm mt-1">
+            <h2 className="text-xl font-light text-e-text">Tu huella</h2>
+            <p className="text-e-muted text-sm mt-1">
               Una frase que te define. Será lo primero que alguien lea de ti.
             </p>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-stone-400 text-sm">
+              <label className="text-e-muted text-sm">
                 {HUELLA_PROMPTS[promptIndex]}
               </label>
               <textarea
@@ -210,14 +213,14 @@ export default function OnboardingPage() {
                 onChange={e => setHuella(e.target.value)}
                 maxLength={200}
                 placeholder="Escribe lo que se te venga a la mente…"
-                className="bg-stone-800 border border-stone-700 rounded-lg px-4 py-3 text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-600 transition-colors resize-none"
+                className={`${inputClass} resize-none`}
               />
-              <p className="text-stone-600 text-xs text-right">{huella.length}/200</p>
+              <p className="text-e-faint text-xs text-right">{huella.length}/200</p>
             </div>
 
             <div className="flex flex-col gap-3">
-              <label className="text-stone-400 text-sm">¿Qué te trae hoy?</label>
-              <div className="flex justify-between text-xs text-stone-500 px-1">
+              <label className="text-e-muted text-sm">¿Qué te trae hoy?</label>
+              <div className="flex justify-between text-xs text-e-faint px-1">
                 <span>Escuchar</span>
                 <span>Conectar</span>
               </div>
@@ -228,9 +231,9 @@ export default function OnboardingPage() {
                 step={1}
                 value={intention}
                 onChange={e => setIntention(parseInt(e.target.value) as Intention)}
-                className="w-full accent-amber-600"
+                className="w-full"
               />
-              <p className="text-center text-amber-500 text-sm font-medium">
+              <p className="text-center text-e-primary text-sm font-medium">
                 {INTENTION_LABELS[intention]}
               </p>
             </div>
@@ -241,7 +244,7 @@ export default function OnboardingPage() {
           <button
             type="submit"
             disabled={loading || huella.trim().length < 10}
-            className="w-full bg-amber-700 hover:bg-amber-600 disabled:bg-stone-800 disabled:text-stone-600 text-stone-100 rounded-lg py-3 font-medium transition-colors mt-auto"
+            className={btnPrimary}
           >
             {loading ? 'Guardando…' : 'Empezar la aventura'}
           </button>
