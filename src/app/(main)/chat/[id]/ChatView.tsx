@@ -47,18 +47,32 @@ export default function ChatView({ connectionId, userId, partner, initialMessage
 
   useEffect(() => {
     const supabase = createClient()
+
     const channel = supabase
       .channel(`chat:${connectionId}`)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'messages', filter: `connection_id=eq.${connectionId}` },
         payload => {
-          setMessages(prev => [...prev, payload.new as Message])
+          const msg = payload.new as Message
+          setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg])
         }
       )
       .subscribe()
 
-    return () => { supabase.removeChannel(channel) }
+    const poll = setInterval(async () => {
+      const { data } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('connection_id', connectionId)
+        .order('created_at', { ascending: true })
+      if (data) setMessages(data as Message[])
+    }, 4000)
+
+    return () => {
+      supabase.removeChannel(channel)
+      clearInterval(poll)
+    }
   }, [connectionId])
 
   async function sendMessage(content: string, type: MessageType = 'text') {
