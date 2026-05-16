@@ -72,11 +72,11 @@ export default async function HomePage() {
       {enriched.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center">
           <div className="w-16 h-16 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center">
-            <span className="text-2xl">🌙</span>
+            <span className="text-2xl">○</span>
           </div>
-          <p className="text-stone-300 font-light">Esta noche puede llegar alguien</p>
+          <p className="text-stone-300 font-light">Buscando tu conexión</p>
           <p className="text-stone-600 text-sm max-w-xs">
-            El matching ocurre a las 3:00. Si hay alguien compatible, aparecerá aquí mañana.
+            Cuando alguien compatible aparezca, llegará aquí. No hace falta hacer nada.
           </p>
         </div>
       ) : (

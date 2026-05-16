@@ -66,6 +66,8 @@ export default function OnboardingPage() {
       return
     }
 
+    await supabase.rpc('try_match', { p_user_id: user.id })
+
     router.replace('/home')
   }
 
